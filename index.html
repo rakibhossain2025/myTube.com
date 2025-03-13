@@ -3,7 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MyTube</title>
+    <title>RHTube</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <link
       href="https://cdn.jsdelivr.net/npm/daisyui@5"
       rel="stylesheet"
@@ -15,40 +22,71 @@
         background-color: #ff1f3d;
         color: white;
       }
+      .search-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+      .search-box {
+        width: 250px;
+        padding: 10px;
+        padding-left: 40px;
+        border: 1px solid #ccc;
+        border-radius: 20px;
+        outline: none;
+        transition: width 0.3s ease-in-out;
+      }
+      .search-icon {
+        position: absolute;
+        left: 10px;
+        font-size: 18px;
+        color: gray;
+        cursor: pointer;
+      }
+
+      /* Mobile Responsive */
+      @media (max-width: 768px) {
+        .search-box {
+          width: 0;
+          padding: 10px;
+          border: none;
+          visibility: hidden;
+        }
+        .search-container.active .search-box {
+          width: 200px;
+          border: 1px solid #ccc;
+          visibility: visible;
+        }
+      }
+      
     </style>
   </head>
   <body>
     <header
       class="flex justify-between w-11/12 mx-auto py-4 border-b-2 border-[#17171720]"
     >
-      <div class="cursor-pointer">
-        <img src="./img/Logo.png" class="w-[150px]" alt="" />
+      <div class="cursor-pointer flex items-center" onclick="reload()">
+        <div>
+          <img src="./img/cropd.png" alt="" />
+        </div>
+        <div>
+          <h1 class="text-4xl font-bold text-[#f00]">RH <span class="text-[#0011ff]"> Tube </span></h1>
+        </div>
       </div>
-      <div>
-        <label id="search" class="input">
-          <svg
-            class="h-[1em] opacity-50"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-          >
-            <g
-              stroke-linejoin="round"
-              stroke-linecap="round"
-              stroke-width="2.5"
-              fill="none"
-              stroke="currentColor"
-            >
-              <circle cx="11" cy="11" r="8"></circle>
-              <path d="m21 21-4.3-4.3"></path>
-            </g>
-          </svg>
-          <input type="search" required placeholder="Search what your mind" />
-        </label>
+      <div id="blockd" class="search-container">
+        <i class="fas fa-search search-icon" onclick="toggleSearch()"></i>
+        <input
+          id="search"
+          type="text"
+          class="search-box"
+          placeholder="Search..."
+        />
       </div>
       <div>
         <button class="btn bg-[#FF1F3D] text-xl text-white">Blog</button>
       </div>
     </header>
+
     <main class="w-11/12 mx-auto">
       <section id="btnconti" class="flex justify-center gap-5 mt-6">
         <div>
@@ -61,30 +99,30 @@
           </button>
         </div>
       </section>
-      <section id="videos-container" class="grid gap-4 grid-cols-4 mt-4"> 
+      <div class="text-center">
+        <span
+          id="loader"
+          class="mt-4 loading hidden loading-infinity loading-xl text-red-400"
+        ></span>
+      </div>
+      <section
+        id="videos-container"
+        class="grid gap-1 md:gap-2 lg:gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mt-4"
+      >
         <div
           class="col-span-full items-center justify-center mt-24 flex flex-col"
         >
           <img class="w-[150px]" src="./img/Icon.png" alt="" />
-          <h2 class="text-2xl mt-3 font-bold">
+          <h2 class="text-2xl mt-3 text-center font-bold">
             Oops!! Sorry, There is no content here
           </h2>
         </div>
       </section>
-
-      <!-- modal  -->
-
       <dialog id="my_modal_1" class="modal">
-        <div class="modal-box">
-          <form method="dialog">
-            <button
-              class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-            >
-              ✕
-            </button>
-          </form>
-          <div id="detailsConti"></div>
-        </div>
+        <div id="detailsConti" class="modal-box px-2 py-2 bg-red-100"></div>
+        <form method="dialog" class="modal-backdrop">
+          <button></button>
+        </form>
       </dialog>
     </main>
 

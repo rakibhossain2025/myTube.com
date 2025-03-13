@@ -2,6 +2,15 @@ fetch("https://openapi.programming-hero.com/api/phero-tube/categories")
   .then((res) => res.json())
   .then((data) => Diebtn(data.categories));
 
+function onloading() {
+  document.getElementById("loader").classList.remove("hidden");
+  document.getElementById("videos-container").classList.add("hidden");
+}
+function offloading() {
+  document.getElementById("loader").classList.add("hidden");
+  document.getElementById("videos-container").classList.remove("hidden");
+}
+
 function remove() {
   const abtn = document.getElementsByClassName("bg");
   for (let b of abtn) {
@@ -18,7 +27,9 @@ function Diebtn(data) {
     divConti.append(btnconti);
   }
 }
+
 function allvideos(search = "") {
+  onloading();
   fetch(
     `https://openapi.programming-hero.com/api/phero-tube/videos?title=${search}`
   )
@@ -31,6 +42,7 @@ function allvideos(search = "") {
 }
 
 const catagory = (id) => {
+  onloading();
   const url = `https://openapi.programming-hero.com/api/phero-tube/category/${id}`;
   fetch(url)
     .then((rem) => rem.json())
@@ -50,11 +62,12 @@ function autocall(video) {
           class="col-span-full items-center justify-center mt-24 flex flex-col"
         >
           <img class="w-[150px]" src="./img/Icon.png" alt="" />
-          <h2 class="text-2xl mt-3 font-bold">
+          <h2 class="text-2xl mt-3 text-center font-bold">
             Oops!! Sorry, There is no content here
           </h2>
         </div>
   `;
+    offloading();
     return;
   }
   video.forEach((video) => {
@@ -105,6 +118,7 @@ function autocall(video) {
     `;
     videoSetion.append(div);
   });
+  offloading();
 }
 const detailbtn = (id) => {
   const detailId = `https://openapi.programming-hero.com/api/phero-tube/video/${id}`;
@@ -116,10 +130,39 @@ function displaymodal(data) {
   document.getElementById("my_modal_1").showModal();
   const modal = document.getElementById("detailsConti");
   modal.innerHTML = `
-  <h1></h1>
+<div class="card bg-base-100 image-full w-full shadow-sm">
+  <figure>
+    <img class="brightness-50" src="${data.thumbnail}" />
+  </figure>
+  <div class="card-body">
+    <h2
+      class="text-3xl font-bold pb-1 mb-2 border-b-2 border-yellow-600 text-center"
+    >
+      ${data.title}
+    </h2>
+    <div
+      class="border-b-1 bg-[#1d1c1c] border-red-700 flex  justify-between items-center"
+    >
+      <h3 class="text-xl pb-1">
+        Author: ${data.authors[0].profile_name}
+      </h3>
+      <div>
+        <img class="w-12"  src="${data.authors[0].profile_picture}" />
+      </div>
+    </div>
+    <p class="text-xl text-white">'${data.description}'</p>
+  </div>
+</div>
   `;
+}
+function toggleSearch() {
+  document.querySelector(".search-container").classList.toggle("active");
 }
 document.getElementById("search").addEventListener("keyup", (k) => {
   const letter = k.target.value;
   allvideos(letter);
 });
+function reload(){
+  location.reload()
+}
+allvideos();
